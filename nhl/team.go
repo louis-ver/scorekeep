@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-type Teams struct {
-	Team []Team `json:"teams"`
+type TeamsDTO struct {
+	Teams []TeamDTO `json:"teams"`
 }
 
-type Team struct {
+type TeamDTO struct {
 	ID       int    `json:"id"`
 	FullName string `json:"name"`
 	Name     string `json:"teamName"`
@@ -19,14 +19,14 @@ type Team struct {
 
 const teamsEndpoint = "/teams"
 
-func GetTeams() Teams {
+func GetTeams() TeamsDTO {
 	resp, err := http.Get(fmt.Sprintf("%s%s", ApiURL, teamsEndpoint))
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
 	decoder := json.NewDecoder(resp.Body)
-	var teams Teams
+	var teams TeamsDTO
 	err = decoder.Decode(&teams)
 	if err != nil {
 		panic(err)

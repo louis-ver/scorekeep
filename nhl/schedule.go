@@ -6,38 +6,38 @@ import (
 	"net/http"
 )
 
-type Dates struct {
-	Date []Date `json:"dates"`
+type DatesDTO struct {
+	Dates []DateDTO `json:"dates"`
 }
 
-type Date struct {
-	ScheduleTeam []ScheduleTeam `json:"games"`
+type DateDTO struct {
+	Games []GameDTO `json:"games"`
 }
 
-type ScheduleTeam struct {
-	Game Game `json:"teams"`
+type GameDTO struct {
+	Teams ScheduleTeamDTO `json:"teams"`
 }
 
-type Game struct {
-	Away Record `json:"away"`
-	Home Record `json:"home"`
+type ScheduleTeamDTO struct {
+	Away ScheduleRecordDTO `json:"away"`
+	Home ScheduleRecordDTO `json:"home"`
 }
 
-type Record struct {
-	Score int  `json:"score"`
-	Team  Team `json:"team"`
+type ScheduleRecordDTO struct {
+	Score int     `json:"score"`
+	Team  TeamDTO `json:"team"`
 }
 
 const schedulesEndpoint = "/schedule"
 
-func GetScoresForDate(date string) Dates {
+func GetScoresForDate(date string) DatesDTO {
 	resp, err := http.Get(fmt.Sprintf("%s%s?startDate=%s&endDate=%s", ApiURL, schedulesEndpoint, date, date))
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
 	decoder := json.NewDecoder(resp.Body)
-	var dates Dates
+	var dates DatesDTO
 	err = decoder.Decode(&dates)
 	if err != nil {
 		panic(err)
