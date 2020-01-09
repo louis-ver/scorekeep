@@ -6,8 +6,6 @@ import (
 	"net/http"
 )
 
-var nhlServer = "https://statsapi.web.nhl.com/api/v1"
-
 type Teams struct {
 	Team []Team `json:"teams"`
 }
@@ -19,8 +17,10 @@ type Team struct {
 	Location string `json:"locationName"`
 }
 
+const teamsEndpoint = "/teams"
+
 func GetTeams() Teams {
-	resp, err := http.Get(fmt.Sprintf("%s/teams", nhlServer))
+	resp, err := http.Get(fmt.Sprintf("%s%s", ApiURL, teamsEndpoint))
 	if err != nil {
 		panic(err)
 	}
