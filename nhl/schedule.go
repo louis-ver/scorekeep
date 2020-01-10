@@ -1,9 +1,10 @@
 package nhl
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/louis-ver/scorekeep/util"
 )
 
 type DatesDTO struct {
@@ -35,10 +36,8 @@ func GetScoresForDate(date string) DatesDTO {
 	if err != nil {
 		panic(err)
 	}
-	defer resp.Body.Close()
-	decoder := json.NewDecoder(resp.Body)
 	var dates DatesDTO
-	err = decoder.Decode(&dates)
+	util.DecodeJSON(resp, &dates)
 	if err != nil {
 		panic(err)
 	}

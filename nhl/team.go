@@ -1,9 +1,10 @@
 package nhl
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/louis-ver/scorekeep/util"
 )
 
 type TeamsDTO struct {
@@ -24,10 +25,8 @@ func GetTeams() TeamsDTO {
 	if err != nil {
 		panic(err)
 	}
-	defer resp.Body.Close()
-	decoder := json.NewDecoder(resp.Body)
 	var teams TeamsDTO
-	err = decoder.Decode(&teams)
+	err = util.DecodeJSON(resp, &teams)
 	if err != nil {
 		panic(err)
 	}
