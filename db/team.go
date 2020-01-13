@@ -7,11 +7,12 @@ type Team struct {
 	Link       string
 	Location   string
 	Name       string
+	TeamName   string
 }
 
 func GetTeamsForLeague(league int) []Team {
 	db := Open()
 	var teams []Team
-	db.Where("league = ?", league).Find(&teams)
+	db.Where("league_id = ?", league).Find(&teams)
 	return teams
 }

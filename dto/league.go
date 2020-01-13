@@ -1,9 +1,9 @@
 package dto
 
 type LeagueDTO struct {
-	ID      int
-	Name    string
-	Acronym string
-	Sport   string
-	Teams   []TeamDTO
+	ID      int       `json:"id"`
+	Name    string    `json:"name"`
+	Acronym string    `json:"acronym"`
+	Sport   string    `json:"sport"`
+	Teams   []TeamDTO `json:"teams,omitempty"`
 }

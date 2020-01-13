@@ -1,7 +1,8 @@
 package dto
 
 type TeamDTO struct {
-	ID       int
-	Location string
-	Name     string
+	ID       int    `json:"id"`
+	Location string `json:"location"`
+	Name     string `json:"name"`
+	TeamName string `json:"team_name"`
 }
