@@ -1,29 +1,34 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
-	"time"
+	"strconv"
 
-	"github.com/louis-ver/scorekeep/nhl"
+	"github.com/gin-gonic/gin"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/louis-ver/scorekeep/db"
 )
 
-func main() {
-	nhlTeamHandler := func(w http.ResponseWriter, req *http.Request) {
-		json.NewEncoder(w).Encode(nhl.GetTeams())
-	}
+func setupRouter() *gin.Engine {
+	r := gin.Default()
 
-	nhlScheduleHandler := func(w http.ResponseWriter, req *http.Request) {
-		date := req.URL.Query().Get("date")
-		if date == "" {
-			date = time.Now().Format("2006-01-02")
+	r.GET("/leagues", func(c *gin.Context) {
+		c.JSON(http.StatusOK, db.GetLeagues())
+	})
+
+	r.GET("/leagues/:id", func(c *gin.Context) {
+		leagueID, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.Status(http.StatusNotFound)
+		} else {
+			c.JSON(http.StatusOK, db.GetLeague(leagueID))
 		}
-		json.NewEncoder(w).Encode(nhl.GetScoresForDate(date))
-	}
+	})
 
-	http.HandleFunc("/nhl/teams", nhlTeamHandler)
-	http.HandleFunc("/nhl/schedule", nhlScheduleHandler)
+	return r
+}
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+func main() {
+	r := setupRouter()
+	r.Run(":8080")
 }
