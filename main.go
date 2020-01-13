@@ -21,7 +21,8 @@ func setupRouter() *gin.Engine {
 		if err != nil {
 			c.Status(http.StatusNotFound)
 		} else {
-			c.JSON(http.StatusOK, db.GetLeague(leagueID))
+			league := db.GetLeague(leagueID)
+			c.JSON(http.StatusOK, league)
 		}
 	})
 
