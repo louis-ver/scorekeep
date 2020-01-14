@@ -30,6 +30,8 @@ func setupRouter() *gin.Engine {
 		case "nhl":
 			nhl := initialize()
 			c.JSON(http.StatusOK, nhl.GetScores(date))
+		default:
+			c.Status(http.StatusNotFound)
 		}
 	})
 
