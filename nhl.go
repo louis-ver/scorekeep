@@ -101,6 +101,16 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 	return scores
 }
 
+func (n *nhlapi) AddFavorite(favorite string) {
+	config := GetConfig()
+
+	if !stringInSlice(favorite, config.Favorites.NHL) {
+		config.Favorites.NHL = append(config.Favorites.NHL, favorite)
+	}
+
+	config.Update()
+}
+
 func stringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
