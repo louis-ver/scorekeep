@@ -2,31 +2,34 @@ package main
 
 import (
 	"net/http"
-	"strconv"
-
-	"github.com/louis-ver/scorekeep/dto"
+	"time"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/louis-ver/scorekeep/service"
 )
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/leagues", func(c *gin.Context) {
-		var leagues []dto.LeagueDTO
-		leagues = service.GetLeagues()
-		c.JSON(http.StatusOK, leagues)
+		c.JSON(http.StatusOK, []string{"nhl"})
 	})
 
-	r.GET("/leagues/:id", func(c *gin.Context) {
-		leagueID, err := strconv.Atoi(c.Param("id"))
-		if err != nil {
+	r.GET("/leagues/:league_name", func(c *gin.Context) {
+		switch leagueName := c.Param("league_name"); leagueName {
+		case "nhl":
+			nhl := initialize()
+			c.JSON(http.StatusOK, nhl.GetTeams())
+		default:
 			c.Status(http.StatusNotFound)
-		} else {
-			league := service.GetLeague(leagueID)
-			c.JSON(http.StatusOK, league)
+		}
+	})
+
+	r.GET("/leagues/:league_name/scores", func(c *gin.Context) {
+		date := c.DefaultQuery("date", time.Now().Format("2006-01-02"))
+		switch leagueName := c.Param("league_name"); leagueName {
+		case "nhl":
+			nhl := initialize()
+			c.JSON(http.StatusOK, nhl.GetScores(date))
 		}
 	})
 
