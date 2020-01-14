@@ -76,7 +76,7 @@ type nhlschedulerecord struct {
 	Team  nhlteam `json:"team"`
 }
 
-func (n *nhlapi) GetScores(date string) []Game {
+func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 	resp, err := http.Get(fmt.Sprintf("%s%s?startDate=%s&endDate=%s", n.address, "/schedule", date, date))
 	if err != nil {
 		panic(err)
@@ -91,7 +91,21 @@ func (n *nhlapi) GetScores(date string) []Game {
 	for _, element := range games.Games {
 		home := Team{Name: element.Teams.Home.Team.FullName, Score: element.Teams.Home.Score}
 		away := Team{Name: element.Teams.Away.Team.FullName, Score: element.Teams.Away.Score}
-		scores = append(scores, Game{Home: home, Away: away})
+		game := Game{Home: home, Away: away}
+		if stringInSlice(home.Name, favorites) || stringInSlice(away.Name, favorites) {
+			scores = append([]Game{game}, scores...)
+		} else {
+			scores = append(scores, Game{Home: home, Away: away})
+		}
 	}
 	return scores
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }

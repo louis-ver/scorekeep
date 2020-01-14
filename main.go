@@ -26,10 +26,11 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/leagues/:league_name/scores", func(c *gin.Context) {
 		date := c.DefaultQuery("date", time.Now().Format("2006-01-02"))
+		favorites := c.DefaultQuery("favorites", "")
 		switch leagueName := c.Param("league_name"); leagueName {
 		case "nhl":
 			nhl := initialize()
-			c.JSON(http.StatusOK, nhl.GetScores(date))
+			c.JSON(http.StatusOK, nhl.GetScores(date, []string{favorites}))
 		default:
 			c.Status(http.StatusNotFound)
 		}
