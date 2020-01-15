@@ -92,7 +92,9 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 		home := Team{Name: element.Teams.Home.Team.FullName, Score: element.Teams.Home.Score}
 		away := Team{Name: element.Teams.Away.Team.FullName, Score: element.Teams.Away.Score}
 		game := Game{Home: home, Away: away}
-		if stringInSlice(home.Name, favorites) || stringInSlice(away.Name, favorites) {
+		homeResourceName := teamNameToResourceName(home.Name)
+		awayResourceName := teamNameToResourceName(away.Name)
+		if stringInSlice(homeResourceName, favorites) || stringInSlice(awayResourceName, favorites) {
 			scores = append([]Game{game}, scores...)
 		} else {
 			scores = append(scores, Game{Home: home, Away: away})
@@ -103,19 +105,6 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 
 func (n *nhlapi) AddFavorite(favorite string) {
 	config := GetConfig()
-
-	if !stringInSlice(favorite, config.Favorites.NHL) {
-		config.Favorites.NHL = append(config.Favorites.NHL, favorite)
-	}
-
-	config.Update()
-}
-
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
+	config.AddFavorite(favorite, nhl)
+	config.WriteToFile()
 }

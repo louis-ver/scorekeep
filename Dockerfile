@@ -7,8 +7,8 @@ COPY . .
 RUN apk add git \
     && go get -u -v \
         github.com/gin-gonic/gin \
-        github.com/jinzhu/gorm \
-        github.com/jinzhu/gorm/dialects/postgres \
+        golang.org/x/text/transform \
+        golang.org/x/text/unicode/norm \
     && go build -o /usr/local/bin/scorekeep .
 
 FROM alpine:latest

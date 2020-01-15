@@ -10,12 +10,27 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	nhl            = "nhl"
+	configDirname  = ".scorekeep"
+	configFilename = "config.yaml"
+)
+
 type Config struct {
 	Favorites Favorites
 }
 
 type Favorites struct {
 	NHL []string
+}
+
+func CreateConfigDirAndFile() {
+	os.MkdirAll(getConfigDirectory(), 0755)
+	file, err := os.OpenFile(getConfigFilePath(), os.O_RDONLY|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	file.Close()
 }
 
 func GetConfig() Config {
@@ -31,7 +46,7 @@ func GetConfig() Config {
 	return config
 }
 
-func (c *Config) Update() {
+func (c *Config) WriteToFile() {
 	d, err := yaml.Marshal(&c)
 	if err != nil {
 		log.Fatal(err)
@@ -40,20 +55,32 @@ func (c *Config) Update() {
 	ioutil.WriteFile(getConfigFilePath(), d, 0644)
 }
 
+func (c *Config) AddFavorite(f string, league string) {
+	switch league {
+	case nhl:
+		if !stringInSlice(f, c.Favorites.NHL) {
+			c.Favorites.NHL = append(c.Favorites.NHL, f)
+		}
+	default:
+		log.Print("League not supported")
+	}
+}
+
 func getConfigFilePath() string {
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
 	}
-	configFile := fmt.Sprintf("%s/.scorekeep/config.yaml", usr.HomeDir)
+	configFile := fmt.Sprintf("%s/%s/%s", usr.HomeDir, configDirname, configFilename)
 
 	return configFile
 }
 
-func touchConfigFile() {
-	file, err := os.OpenFile(getConfigFilePath(), os.O_RDONLY|os.O_CREATE, 0644)
+func getConfigDirectory() string {
+	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
 	}
-	file.Close()
+
+	return fmt.Sprintf("%s/%s", usr.HomeDir, configDirname)
 }
