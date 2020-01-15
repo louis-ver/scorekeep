@@ -1,7 +1,10 @@
-package main
+package api
 
 import (
+	"fmt"
 	"testing"
+
+	"gopkg.in/yaml.v2"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -51,27 +54,25 @@ type IOUtil struct {
 	mock.Mock
 }
 
-var byteArray = []byte{
-	102, 97, 118, 111, 114, 105,
-	116, 101, 115, 58, 10, 32, 32,
-	110, 104, 108, 58, 10, 32, 45,
-	32, 109, 111, 110, 116, 101, 97,
-	108, 45, 99, 97, 100, 105, 101, 110, 115, 10}
-
 func (m *IOUtil) ReadFile(filename string) ([]byte, error) {
-	return byteArray, nil
+	fmt.Println("Mocked ReadFile function")
+	config, _ := yaml.Marshal(&Config{
+		Favorites: Favorites{NHL: []string{"montreal-canadiens"}},
+	})
+	return config, nil
 }
 
 func TestGetConfig(t *testing.T) {
-	ioUtilMock := new(IOUtil)
-	filename := "/.scorekeep/config.yaml"
-	expectedConfig := Config{
+	ioUtil := new(IOUtil)
+	filename := "/Users/louisolivierguerin/.scorekeep/config.yaml"
+	expect := Config{
 		Favorites: Favorites{NHL: []string{"montreal-canadiens"}},
 	}
+	byteConfig, _ := yaml.Marshal(&expect)
 
-	ioUtilMock.On("ReadFile", filename).Return(byteArray, nil)
+	ioUtil.On("ReadFile", filename).Return(byteConfig, nil)
 
 	config := GetConfig()
 
-	assert.Equal(t, expectedConfig, config)
+	assert.Equal(t, expect, config)
 }

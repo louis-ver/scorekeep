@@ -1,8 +1,9 @@
 package main
 
+import (
+	"github.com/louis-ver/scorekeep/cmd"
+)
+
 func main() {
-	CreateConfigDirAndFile()
-	config := GetConfig()
-	config.AddFavorite("columbus-blue-jackets", nhl)
-	config.WriteToFile()
+	cmd.Execute()
 }

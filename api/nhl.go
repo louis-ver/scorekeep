@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ type nhlapi struct {
 	address string
 }
 
-func initialize() *nhlapi {
+func Initialize() *nhlapi {
 	return &nhlapi{address: "https://statsapi.web.nhl.com/api/v1"}
 }
 
@@ -105,6 +105,6 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 
 func (n *nhlapi) AddFavorite(favorite string) {
 	config := GetConfig()
-	config.AddFavorite(favorite, nhl)
+	config.AddFavorite(favorite, NHL)
 	config.WriteToFile()
 }

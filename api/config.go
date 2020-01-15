@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	nhl            = "nhl"
+	NHL            = "nhl"
 	configDirname  = ".scorekeep"
 	configFilename = "config.yaml"
 )
@@ -57,7 +57,7 @@ func (c *Config) WriteToFile() {
 
 func (c *Config) AddFavorite(f string, league string) {
 	switch league {
-	case nhl:
+	case NHL:
 		if !stringInSlice(f, c.Favorites.NHL) {
 			c.Favorites.NHL = append(c.Favorites.NHL, f)
 		}
