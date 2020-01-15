@@ -63,6 +63,7 @@ func (c *Config) AddFavorite(f string, league string) {
 		}
 	default:
 		log.Print("League not supported")
+		// TODO: Add return error when league not supported
 	}
 }
 
