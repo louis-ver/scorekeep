@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
-	"strings"
 	"text/tabwriter"
 
 	"github.com/louis-ver/scorekeep/api"
@@ -21,18 +21,17 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		nhl := api.Initialize()
 		games := nhl.GetScores(date, []string{})
-		w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', tabwriter.DiscardEmptyColumns)
-		fmt.Fprintln(w, "AWAY\t\tHOME\t\t")
-		fmt.Fprintln(w, formatScore(games))
+		w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
+		printScores(w, games)
+		w.Flush()
 	},
 }
 
-func formatScore(games []api.Game) string {
-	var str strings.Builder
+func printScores(w io.Writer, games []api.Game) {
+	fmt.Fprintln(w, "AWAY\tSCORE\tHOME\tSCORE")
 	for _, element := range games {
-		str.WriteString(fmt.Sprintf("%s\t%d\t%s\t%d\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score))
+		fmt.Fprintf(w, "%s\t%d\t%s\t%d\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score)
 	}
-	return str.String()
 }
 
 func Execute() {
