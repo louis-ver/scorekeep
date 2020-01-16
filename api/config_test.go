@@ -1,13 +1,9 @@
 package api
 
 import (
-	"fmt"
 	"testing"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestAddFavorite(t *testing.T) {
@@ -20,7 +16,7 @@ func TestAddFavorite(t *testing.T) {
 		},
 	}
 
-	config.AddFavorite(montreal, nhl)
+	config.AddFavorite(montreal, NHL)
 
 	assert.Equal(t, config.Favorites.NHL, []string{colorado, montreal})
 }
@@ -45,34 +41,7 @@ func TestAddFavoriteAlreadyInFavorites(t *testing.T) {
 		},
 	}
 
-	config.AddFavorite(colorado, nhl)
+	config.AddFavorite(colorado, NHL)
 
 	assert.Equal(t, config.Favorites.NHL, []string{colorado})
-}
-
-type IOUtil struct {
-	mock.Mock
-}
-
-func (m *IOUtil) ReadFile(filename string) ([]byte, error) {
-	fmt.Println("Mocked ReadFile function")
-	config, _ := yaml.Marshal(&Config{
-		Favorites: Favorites{NHL: []string{"montreal-canadiens"}},
-	})
-	return config, nil
-}
-
-func TestGetConfig(t *testing.T) {
-	ioUtil := new(IOUtil)
-	filename := "/Users/louisolivierguerin/.scorekeep/config.yaml"
-	expect := Config{
-		Favorites: Favorites{NHL: []string{"montreal-canadiens"}},
-	}
-	byteConfig, _ := yaml.Marshal(&expect)
-
-	ioUtil.On("ReadFile", filename).Return(byteConfig, nil)
-
-	config := GetConfig()
-
-	assert.Equal(t, expect, config)
 }
