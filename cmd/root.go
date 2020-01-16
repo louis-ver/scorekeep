@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 	Long:  "Scorekeep is a CLI that enables you to track game scores across the most popular professional sports leagues",
 	Run: func(cmd *cobra.Command, args []string) {
 		nhl := api.Initialize()
-		games := nhl.GetScores(date, []string{})
+		games := nhl.GetScores(date, api.GetConfig().Favorites.NHL)
 		printScores(games)
 	},
 }
