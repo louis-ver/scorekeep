@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"text/tabwriter"
 
@@ -16,22 +15,22 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "scorekeep",
-	Short: "The best way to track scores across leagues",
-	Long:  "Scorekeep is a CLI that enables you to track game scores across all professional sports leagues",
+	Short: "The easiest way to track scores across leagues",
+	Long:  "Scorekeep is a CLI that enables you to track game scores across the most popular professional sports leagues",
 	Run: func(cmd *cobra.Command, args []string) {
 		nhl := api.Initialize()
 		games := nhl.GetScores(date, []string{})
-		w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
-		printScores(w, games)
-		w.Flush()
+		printScores(games)
 	},
 }
 
-func printScores(w io.Writer, games []api.Game) {
+func printScores(games []api.Game) {
+	w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
 	fmt.Fprintln(w, "AWAY\tSCORE\tHOME\tSCORE")
 	for _, element := range games {
 		fmt.Fprintf(w, "%s\t%d\t%s\t%d\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score)
 	}
+	w.Flush()
 }
 
 func Execute() {
