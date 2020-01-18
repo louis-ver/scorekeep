@@ -12,7 +12,7 @@ type nba struct {
 	apikey string
 }
 
-func InitializeNBA(host, apiKey string) *nba {
+func InitializeNBA(host, apiKey string) League {
 	return &nba{host: host, apikey: apiKey}
 }
 
@@ -40,7 +40,7 @@ type score struct {
 	Points string `json:"points"`
 }
 
-func (n *nba) GetScores(date string) []Game {
+func (n *nba) GetScores(date string, favorites []string) []Game {
 	games := fmt.Sprintf("/games/date/%s", date)
 	req, err := http.NewRequest("GET", n.host + games, nil)
 	if err != nil {
@@ -71,4 +71,8 @@ func (n *nba) GetScores(date string) []Game {
 			})
 	}
 	return scores
+}
+
+func (n *nba) GetTeams() []string {
+	return []string{}
 }

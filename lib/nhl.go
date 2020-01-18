@@ -10,7 +10,7 @@ type nhlapi struct {
 	host string
 }
 
-func InitializeNHL(host string) *nhlapi {
+func InitializeNHL(host string) League {
 	return &nhlapi{host: host}
 }
 

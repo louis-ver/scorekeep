@@ -28,7 +28,7 @@ func main() {
 		case "nhl":
 			c.JSON(http.StatusOK, nhl.GetScores(date, []string{favorites}))
 		case "nba":
-			c.JSON(http.StatusOK, nba.GetScores(date))
+			c.JSON(http.StatusOK, nba.GetScores(date, []string{}))
 		default:
 			c.Status(http.StatusNotFound)
 		}
