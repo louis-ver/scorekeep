@@ -1,4 +1,4 @@
-package api
+package main
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 
+	"github.com/louis-ver/scorekeep/lib"
 	"gopkg.in/yaml.v2"
 )
 
@@ -58,7 +59,7 @@ func (c *Config) WriteToFile() {
 func (c *Config) AddFavorite(f string, league string) {
 	switch league {
 	case NHL:
-		if !stringInSlice(f, c.Favorites.NHL) {
+		if !lib.StringInSlice(f, c.Favorites.NHL) {
 			c.Favorites.NHL = append(c.Favorites.NHL, f)
 		}
 	default:

@@ -5,7 +5,6 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"github.com/louis-ver/scorekeep/api"
 	"github.com/spf13/cobra"
 )
 
@@ -35,8 +34,8 @@ var leaguesCmd = &cobra.Command{
 func printSupportedLeagues() {
 	w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
 	fmt.Fprintln(w, "NAME\tACRONYM\tSPORT")
-	for _, element := range api.GetSupportedLeagues() {
-		fmt.Fprintf(w, "%s\t%s\t%s\t\n", element.Name, element.Acronym, element.Sport)
-	}
+	// for _, element := range cli.GetSupportedLeagues() {
+	// 	fmt.Fprintf(w, "%s\t%s\t%s\t\n", element.Name, element.Acronym, element.Sport)
+	// }
 	w.Flush()
 }

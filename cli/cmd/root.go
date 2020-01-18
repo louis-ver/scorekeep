@@ -5,7 +5,7 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"github.com/louis-ver/scorekeep/api"
+	"github.com/louis-ver/scorekeep/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -18,13 +18,11 @@ var rootCmd = &cobra.Command{
 	Short: "The easiest way to track scores across leagues",
 	Long:  "Scorekeep is a CLI that enables you to track game scores across the most popular professional sports leagues",
 	Run: func(cmd *cobra.Command, args []string) {
-		nhl := api.Initialize()
-		games := nhl.GetScores(date, api.GetConfig().Favorites.NHL)
-		printScores(games)
+		// Call server and fetch scores
 	},
 }
 
-func printScores(games []api.Game) {
+func printScores(games []lib.Game) {
 	w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
 	fmt.Fprintln(w, "AWAY\tSCORE\tHOME\tSCORE")
 	for _, element := range games {

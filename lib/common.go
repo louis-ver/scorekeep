@@ -1,4 +1,4 @@
-package api
+package lib
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
-func stringInSlice(a string, list []string) bool {
+func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
 			return true

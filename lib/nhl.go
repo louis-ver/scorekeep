@@ -1,4 +1,4 @@
-package api
+package lib
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 )
 
 type nhlapi struct {
-	address string
+	host string
 }
 
-func Initialize() *nhlapi {
-	return &nhlapi{address: "https://statsapi.web.nhl.com/api/v1"}
+func InitializeNHL(host string) *nhlapi {
+	return &nhlapi{host: host}
 }
 
 type nhlteams struct {
@@ -26,7 +26,7 @@ type nhlteam struct {
 }
 
 func (n *nhlapi) GetTeams() []string {
-	resp, err := http.Get(fmt.Sprintf("%s%s", n.address, "/teams"))
+	resp, err := http.Get(fmt.Sprintf("%s%s", n.host, "/teams"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,16 +40,6 @@ func (n *nhlapi) GetTeams() []string {
 		teamNames = append(teamNames, element.FullName)
 	}
 	return teamNames
-}
-
-type Game struct {
-	Home Team
-	Away Team
-}
-
-type Team struct {
-	Name  string
-	Score int
 }
 
 type nhldates struct {
@@ -75,7 +65,7 @@ type nhlschedulerecord struct {
 }
 
 func (n *nhlapi) GetScores(date string, favorites []string) []Game {
-	resp, err := http.Get(fmt.Sprintf("%s%s?startDate=%s&endDate=%s", n.address, "/schedule", date, date))
+	resp, err := http.Get(fmt.Sprintf("%s%s?startDate=%s&endDate=%s", n.host, "/schedule", date, date))
 	if err != nil {
 		panic(err)
 	}
@@ -92,17 +82,11 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 		game := Game{Home: home, Away: away}
 		homeResourceName := teamNameToResourceName(home.Name)
 		awayResourceName := teamNameToResourceName(away.Name)
-		if stringInSlice(homeResourceName, favorites) || stringInSlice(awayResourceName, favorites) {
+		if StringInSlice(homeResourceName, favorites) || StringInSlice(awayResourceName, favorites) {
 			scores = append([]Game{game}, scores...)
 		} else {
 			scores = append(scores, Game{Home: home, Away: away})
 		}
 	}
 	return scores
-}
-
-func (n *nhlapi) AddFavorite(favorite string) {
-	config := GetConfig()
-	config.AddFavorite(favorite, NHL)
-	config.WriteToFile()
 }
