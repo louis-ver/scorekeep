@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+	"net/http"
 	"strings"
 	"unicode"
 
@@ -15,6 +17,15 @@ func stringInSlice(a string, list []string) bool {
 		}
 	}
 	return false
+}
+
+func decodeJSON(resp *http.Response, target interface{}) error {
+	defer resp.Body.Close()
+
+	decoder := json.NewDecoder(resp.Body)
+	err := decoder.Decode(target)
+
+	return err
 }
 
 func teamNameToResourceName(teamName string) string {

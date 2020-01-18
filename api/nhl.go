@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/louis-ver/scorekeep/util"
 )
 
 type nhlapi struct {
@@ -33,7 +31,7 @@ func (n *nhlapi) GetTeams() []string {
 		log.Fatal(err)
 	}
 	var teams nhlteams
-	err = util.DecodeJSON(resp, &teams)
+	err = decodeJSON(resp, &teams)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +80,7 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 		panic(err)
 	}
 	var nhldates nhldates
-	util.DecodeJSON(resp, &nhldates)
+	decodeJSON(resp, &nhldates)
 	if err != nil {
 		panic(err)
 	}
