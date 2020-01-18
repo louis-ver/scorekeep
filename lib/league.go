@@ -2,12 +2,13 @@ package lib
 
 type League interface {
 	GetScores(date string, favorites []string) []Game
-	GetTeams() []string
 }
 
 type Game struct {
-	Home Team
-	Away Team
+	Home                  Team
+	Away                  Team
+	CurrentPeriodOrdinal  string
+	TimeRemainingInPeriod string
 }
 
 type Team struct {

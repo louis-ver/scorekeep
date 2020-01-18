@@ -14,34 +14,6 @@ func InitializeNHL(host string) League {
 	return &nhlapi{host: host}
 }
 
-type nhlteams struct {
-	Teams []nhlteam `json:"teams"`
-}
-
-type nhlteam struct {
-	ID       int    `json:"id"`
-	FullName string `json:"name"`
-	Name     string `json:"teamName"`
-	Location string `json:"locationName"`
-}
-
-func (n *nhlapi) GetTeams() []string {
-	resp, err := http.Get(fmt.Sprintf("%s%s", n.host, "/teams"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	var teams nhlteams
-	err = decodeJSON(resp, &teams)
-	if err != nil {
-		log.Fatal(err)
-	}
-	var teamNames []string
-	for _, element := range teams.Teams {
-		teamNames = append(teamNames, element.FullName)
-	}
-	return teamNames
-}
-
 type nhldates struct {
 	Dates []nhldate `json:"dates"`
 }
@@ -51,17 +23,7 @@ type nhldate struct {
 }
 
 type nhlgame struct {
-	Teams nhlscheduleteam `json:"teams"`
-}
-
-type nhlscheduleteam struct {
-	Away nhlschedulerecord `json:"away"`
-	Home nhlschedulerecord `json:"home"`
-}
-
-type nhlschedulerecord struct {
-	Score int     `json:"score"`
-	Team  nhlteam `json:"team"`
+	ID int `json:"gamePk"`
 }
 
 func (n *nhlapi) GetScores(date string, favorites []string) []Game {
@@ -76,17 +38,54 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 	}
 	var scores []Game
 	games := nhldates.Dates[0]
+	// TODO: Rewrite this in parallel
 	for _, element := range games.Games {
-		home := Team{Name: element.Teams.Home.Team.FullName, Score: element.Teams.Home.Score}
-		away := Team{Name: element.Teams.Away.Team.FullName, Score: element.Teams.Away.Score}
-		game := Game{Home: home, Away: away}
-		homeResourceName := teamNameToResourceName(home.Name)
-		awayResourceName := teamNameToResourceName(away.Name)
-		if StringInSlice(homeResourceName, favorites) || StringInSlice(awayResourceName, favorites) {
-			scores = append([]Game{game}, scores...)
-		} else {
-			scores = append(scores, Game{Home: home, Away: away})
-		}
+		game := n.GetGameState(&element)
+
+		scores = append(scores, game)
 	}
 	return scores
+}
+
+type nhlgamedetail struct {
+	CurrentPeriodOrdinal string   `json:"currentPeriodOrdinal"`
+	PeriodTimeRemaining  string   `json:"currentPeriodTimeRemaining"`
+	Teams                nhlteams `json:"teams"`
+}
+
+type nhlteams struct {
+	Home nhlteam `json:"home"`
+	Away nhlteam `json:"away"`
+}
+
+type nhlteam struct {
+	TeamInfo nhlteaminfo `json:"team"`
+	Goals    int         `json:"goals"`
+}
+
+type nhlteaminfo struct {
+	Name string `json:"name"`
+}
+
+func (n *nhlapi) GetGameState(game *nhlgame) Game {
+	resp, err := http.Get(fmt.Sprintf("%s/game/%d/linescore", n.host, game.ID))
+	if err != nil {
+		log.Fatal(err)
+	}
+	var nhlgamedetail nhlgamedetail
+	decodeJSON(resp, &nhlgamedetail)
+	homeTeam := Team{
+		Name:  nhlgamedetail.Teams.Home.TeamInfo.Name,
+		Score: nhlgamedetail.Teams.Home.Goals,
+	}
+	awayTeam := Team{
+		Name:  nhlgamedetail.Teams.Away.TeamInfo.Name,
+		Score: nhlgamedetail.Teams.Away.Goals,
+	}
+	return Game{
+		Home:                  homeTeam,
+		Away:                  awayTeam,
+		CurrentPeriodOrdinal:  nhlgamedetail.CurrentPeriodOrdinal,
+		TimeRemainingInPeriod: nhlgamedetail.PeriodTimeRemaining,
+	}
 }
