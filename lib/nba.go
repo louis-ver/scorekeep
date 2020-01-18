@@ -63,7 +63,12 @@ func (n *nba) GetScores(date string) []Game {
 		if err != nil {
 			homeScore = 0
 		}
-		scores = append(scores, Game{Home: Team{Name: element.Home.FullName, Score: homeScore}, Away: Team{Name: element.Away.FullName, Score: awayScore}})
+		scores = append(
+			scores,
+			Game{
+				Home: Team{Name: element.Home.FullName, Score: homeScore},
+				Away: Team{Name: element.Away.FullName, Score: awayScore},
+			})
 	}
 	return scores
 }

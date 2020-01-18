@@ -1,8 +1,7 @@
 package lib
 
 type League interface {
-	GetTeams() []string
-	GetScore() []Game
+	GetScores(date string, favorites []string) []Game
 }
 
 type Game struct {
