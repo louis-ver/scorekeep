@@ -41,8 +41,8 @@ type score struct {
 }
 
 func (n *nba) GetScores(date string) []Game {
-	todaysGames := fmt.Sprintf("/games/date/%s", date)
-	req, err := http.NewRequest("GET", n.host + todaysGames, nil)
+	games := fmt.Sprintf("/games/date/%s", date)
+	req, err := http.NewRequest("GET", n.host + games, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
