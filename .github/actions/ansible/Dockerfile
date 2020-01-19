@@ -2,7 +2,8 @@ FROM alpine
 
 ENV ANSIBLE_HOST_KEY_CHECKING=False
 
-RUN apk add \
+RUN apk update \
+  && apk add \
   ansible \
   gcc \
   python3-dev \
@@ -14,5 +15,9 @@ RUN apk add \
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY ssh_key /ssh_key
+
+RUN mkdir -p /etc/ansible/
+
+COPY hosts /etc/ansible/hosts
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
