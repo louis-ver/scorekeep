@@ -76,7 +76,7 @@ func printScores(leagues []League) {
 		leagueUpperCase := strings.ToUpper(league.Name)
 		var periodName string
 		switch leagueUpperCase {
-		case "NHL":
+		case "NATIONAL HOCKEY LEAGUE":
 			periodName = "PERIOD"
 		default:
 			periodName = "QUARTER"
