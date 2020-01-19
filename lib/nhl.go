@@ -10,8 +10,16 @@ type nhlapi struct {
 	host string
 }
 
-func InitializeNHL(host string) League {
+func InitializeNHL(host string) Leaguer {
 	return &nhlapi{host: host}
+}
+
+func (n *nhlapi) GetLeagueInformation() League {
+	return League{
+		Name:    "National Hockey League",
+		Acronym: "NHL",
+		Sport:   "Hockey",
+	}
 }
 
 type nhldates struct {

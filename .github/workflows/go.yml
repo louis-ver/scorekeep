@@ -24,8 +24,14 @@ jobs:
             dep ensure
         fi
 
-    - name: Build
-      run: go build -v .
+    - name: Build CLI
+      run: go build -o scorekeep-cli github.com/louis-ver/scorekeep/cli
+
+    - name: Build Server
+      run: go build -o scorekeep-server github.com/louis-ver/scorekeep/server
+
+    - name: Build Library
+      run: go build -o scorekeep-library github.com/louis-ver/scorekeep/lib
 
     - name: Test
-      run: go test github.com/louis-ver/scorekeep/api
+      run: go test ./...
