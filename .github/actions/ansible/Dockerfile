@@ -15,4 +15,4 @@ RUN apk add \
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY hosts hosts
 
-ENTRYPOINT ['/docker-entrypoint.sh']
+ENTRYPOINT ["/docker-entrypoint.sh"]

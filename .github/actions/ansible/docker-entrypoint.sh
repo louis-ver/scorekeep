@@ -1,6 +1,8 @@
 #!/bin/sh
 
 echo "$VAULT_PASS" > ~/.vault_pass.txt
+
+mkdir -p /etc/ansible
 echo "$SERVER_IP" > /etc/ansible/hosts
 
 mkdir ~/.ssh
