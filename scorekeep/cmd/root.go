@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/fatih/color"
 	"log"
 	"net/http"
 	"os"
@@ -48,11 +47,11 @@ var rootCmd = &cobra.Command{
 
 		printScores([]League{
 			{
-				Name:  "nhl",
+				Name:  "National Hockey League",
 				Games: nhlGames,
 			},
 			{
-				Name:  "nba",
+				Name:  "National Basketball Association",
 				Games: nbaGames,
 			},
 		})
@@ -72,10 +71,9 @@ func fetchScores(league string) []game {
 }
 
 func printScores(leagues []League) {
+	w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', 0)
 	for _, league := range leagues {
-		w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
 		leagueUpperCase := strings.ToUpper(league.Name)
-		color.Cyan(leagueUpperCase)
 		var periodName string
 		switch leagueUpperCase {
 		case "NHL":
@@ -83,12 +81,13 @@ func printScores(leagues []League) {
 		default:
 			periodName = "QUARTER"
 		}
+		fmt.Fprintf(w, "%s\t\t\t\t\t\n", leagueUpperCase)
 		fmt.Fprintf(w, "AWAY\tSCORE\tHOME\tSCORE\t%s\tTIME REMAINING\n", periodName)
 		for _, element := range league.Games {
 			fmt.Fprintf(w, "%s\t%d\t%s\t%d\t%s\t%s\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score, element.CurrentPeriodOrdinal, element.TimeRemainingInPeriod)
 		}
-		w.Flush()
 	}
+	w.Flush()
 }
 
 func Execute() {
