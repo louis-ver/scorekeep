@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: louisolivier/scorekeep:${GITHUB_SHA::8}-develop
+      SHA8: ${GITHUB_SHA::8}
     steps:
       - uses: actions/checkout@v1
       - name: Docker login
@@ -18,9 +18,9 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Docker build
-        run: docker build -t $IMAGE_NAME .
+        run: docker build -t louisolivier/scorekeep:$SHA8-develop .
       - name: Push Image to Docker Hub
-        run: docker push $IMAGE_NAME
+        run: docker push louisolivier/scorekeep:$SHA8-develop
   deploy:
     runs-on: ubuntu-latest
     needs: build
