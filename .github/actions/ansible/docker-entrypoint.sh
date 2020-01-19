@@ -13,7 +13,6 @@ chmod 0600 ~/.ssh/id_rsa
 #  --vault-password-file="/.vault_pass.txt" \
 #  -i web-servers \
 #  /ansible/deploy.yml
-ansible \
-  -i web-servers \
+ansible web-servers \
   -m ping \
   -u githubactions
