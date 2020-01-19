@@ -25,10 +25,10 @@ jobs:
         fi
 
     - name: Build CLI
-      run: go build -o scorekeep-scorekeep github.com/louis-ver/scorekeep/scorekeep
+      run: go build github.com/louis-ver/scorekeep/scorekeep
 
     - name: Build Server
-      run: go build -o scorekeep-scorekeep-server github.com/louis-ver/scorekeep/scorekeep-server
+      run: go build github.com/louis-ver/scorekeep/scorekeep-server
 
     - name: Build Library
       run: go build -o scorekeep-library github.com/louis-ver/scorekeep/library
