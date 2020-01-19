@@ -1,0 +1,29 @@
+name: Build And Deploy Scorekeep Server (develop)
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@develop
+      - name: Docker login
+        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Docker build
+        run: docker build -t louisolivier/scorekeep:$GITHUB_SHA-develop .
+      - name: Push Image to Docker Hub
+        run: docker push louisolivier/scorekeep:$GITHUB_SHA-develop
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./.github/actions/ansible
+        env:
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
