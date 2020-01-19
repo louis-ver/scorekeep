@@ -13,6 +13,6 @@ RUN apk add \
     --upgrade paramiko
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-COPY hosts hosts
+COPY ssh_key /ssh_key
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
