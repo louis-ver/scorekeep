@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/louis-ver/scorekeep/lib"
+	"github.com/louis-ver/scorekeep/library"
 	"net/http"
 	"os"
 	"time"
@@ -17,9 +17,9 @@ func main() {
 	nhlHost := os.Getenv("NHL_API_HOST")
 	nbaHost, nbaApiKey := os.Getenv("NBA_API_HOST"), os.Getenv("NBA_API_KEY")
 
-	apis := map[string]lib.Leaguer{
-		"nhl": lib.InitializeNHL(nhlHost),
-		"nba": lib.InitializeNBA(nbaHost, nbaApiKey),
+	apis := map[string]library.Leaguer{
+		"nhl": library.InitializeNHL(nhlHost),
+		"nba": library.InitializeNBA(nbaHost, nbaApiKey),
 	}
 
 	r := gin.Default()
@@ -43,12 +43,12 @@ func main() {
 	r.Run(":8080")
 }
 
-func scoresResponse(c *gin.Context, l lib.Leaguer, date string, favorites []string) {
+func scoresResponse(c *gin.Context, l library.Leaguer, date string, favorites []string) {
 	c.JSON(http.StatusOK, l.GetScores(date, favorites))
 }
 
-func leaguesResponse(c *gin.Context, leagueMap map[string]lib.Leaguer) {
-	var supportedLeagues []lib.League
+func leaguesResponse(c *gin.Context, leagueMap map[string]library.Leaguer) {
+	var supportedLeagues []library.League
 	for _, leaguer := range leagueMap {
 		supportedLeagues = append(supportedLeagues, leaguer.GetLeagueInformation())
 	}

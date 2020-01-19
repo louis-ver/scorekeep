@@ -1,4 +1,4 @@
-package lib
+package library
 
 import (
 	"fmt"
@@ -40,7 +40,7 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 		panic(err)
 	}
 	var nhldates nhldates
-	decodeJSON(resp, &nhldates)
+	DecodeJSON(resp, &nhldates)
 	if err != nil {
 		panic(err)
 	}
@@ -81,7 +81,7 @@ func (n *nhlapi) GetGameState(game *nhlgame) Game {
 		log.Fatal(err)
 	}
 	var nhlgamedetail nhlgamedetail
-	decodeJSON(resp, &nhlgamedetail)
+	DecodeJSON(resp, &nhlgamedetail)
 	homeTeam := Team{
 		Name:  nhlgamedetail.Teams.Home.TeamInfo.Name,
 		Score: nhlgamedetail.Teams.Home.Goals,

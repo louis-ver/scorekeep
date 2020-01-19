@@ -1,4 +1,4 @@
-package lib
+package library
 
 type Leaguer interface {
 	GetScores(date string, favorites []string) []Game

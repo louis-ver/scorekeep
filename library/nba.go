@@ -1,4 +1,4 @@
-package lib
+package library
 
 import (
 	"fmt"
@@ -63,7 +63,7 @@ func (n *nba) GetScores(date string, favorites []string) []Game {
 		log.Fatal(err)
 	}
 	var nbaGames data
-	decodeJSON(resp, &nbaGames)
+	DecodeJSON(resp, &nbaGames)
 	var scores []Game
 	for _, element := range nbaGames.Api.Games {
 		homeScore, err := strconv.Atoi(element.Home.Score.Points)

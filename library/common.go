@@ -1,4 +1,4 @@
-package lib
+package library
 
 import (
 	"encoding/json"
@@ -19,7 +19,7 @@ func StringInSlice(a string, list []string) bool {
 	return false
 }
 
-func decodeJSON(resp *http.Response, target interface{}) error {
+func DecodeJSON(resp *http.Response, target interface{}) error {
 	defer resp.Body.Close()
 
 	decoder := json.NewDecoder(resp.Body)
