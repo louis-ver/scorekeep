@@ -21,6 +21,7 @@ jobs:
         run: docker push louisolivier/scorekeep:$GITHUB_SHA-develop
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v1
       - uses: ./.github/actions/ansible
