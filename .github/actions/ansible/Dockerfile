@@ -16,6 +16,7 @@ RUN apk update \
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY ssh_key /ssh_key
 COPY ansible-root/ /ansible
+COPY .env-dev /ansible/.env
 
 RUN mkdir -p /etc/ansible/
 
