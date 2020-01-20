@@ -1,4 +1,5 @@
 - hosts: web
+  remote_user: githubactions
   tasks:
   - name: Pull scorekeep-server
     docker_image:
