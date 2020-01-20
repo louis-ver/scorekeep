@@ -10,5 +10,5 @@ chmod 0600 ~/.ssh/id_rsa
 
 ansible-playbook \
   -e "build_sha=$GITHUB_SHA" \
-  --vault-password-file="/.vault_pass.txt" \
+  --vault-password-file="/ansible/.vault_pass" \
   /ansible/deploy.yml
