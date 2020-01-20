@@ -1,6 +1,10 @@
 ---
-- hosts: web
-  remote_user: githubactions
-  tasks:
-    - name: test connection
-      ping:
+- name: Pull scorekeep-server
+  docker_image:
+    name: louisolivier/scorekeep:{{ build_sha }}-develop
+- name: Start server
+  docker_container:
+    name: scorekeep
+    image: louisolivier/scorekeep:{{ build_sha }}-develop
+    ports:
+      - "8080:8080"
