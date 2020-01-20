@@ -1,5 +1,5 @@
 ---
-- hosts: web-servers
+- hosts: web
   remote_user: githubactions
   tasks:
     - name: test connection
