@@ -1,4 +1,4 @@
-- host: web
+- hosts: web
   tasks:
   - name: Pull scorekeep-server
     docker_image:
