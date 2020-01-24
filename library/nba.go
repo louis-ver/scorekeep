@@ -1,11 +1,40 @@
 package library
 
 import (
-	"fmt"
-	"log"
-	"net/http"
+	"github.com/gocolly/colly"
 	"strconv"
 )
+
+var teamMap = map[string]string{
+	"SAC Kings":         "Sacramento Kings",
+	"DET Pistons":       "Detroit Pistons",
+	"OKC Thunder":       "Oklahoma City Thunder",
+	"ORL Magic":         "Orlando Magic",
+	"PHI 76ers":         "Philadelphia 76ers",
+	"TOR Raptors":       "Toronto Raptors",
+	"LA Clippers":       "Los Angeles Clippers",
+	"ATL Hawks":         "Atlanta Hawks",
+	"MEM Grizzlies":     "Memphis Grizzlies",
+	"BOS Celtics":       "Boston Celtics",
+	"WAS Wizards":       "Washington Wizards",
+	"MIA Heat":          "Miami Heat",
+	"LA Lakers":         "Los Angeles Lakers",
+	"NY Knicks":         "New York Knicks",
+	"MIN Timberwolves":  "Minnesota Timberwolves",
+	"CHI Bulls":         "Chicago Bulls",
+	"CLE Cavaliers":     "Cleveland Cavaliers",
+	"POR Trail Blazers": "Portland Trail Blazers",
+	"BKN Nets":          "Brooklyn Nets",
+	"DEN Nuggets":       "Denver Nuggets",
+	"DAL Mavericks":     "Dallas Mavericks",
+	"HOU Rockets":       "Houston Rockets",
+	"IND Pacers":        "Indiana Pacers",
+	"PHX Suns":          "Phoenix Suns",
+	"SA Spurs":          "San Antonio Spurs",
+	"NO Pelicans":       "New Orleans Pelicans",
+	"UTA Jazz":          "Utah Jazz",
+	"GS Warriors":       "Golden State Warriors",
+}
 
 type nba struct {
 	host   string
@@ -52,63 +81,37 @@ type score struct {
 }
 
 func (n *nba) GetScores(date string, favorites []string) []Game {
-	games := fmt.Sprintf("/games/live/")
-	req, err := http.NewRequest("GET", n.host+games, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	req.Header.Set("X-RapidAPI-Key", n.apikey)
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	var nbaGames data
-	DecodeJSON(resp, &nbaGames)
-	var scores []Game
-	for _, element := range nbaGames.Api.Games {
-		homeScore, err := strconv.Atoi(element.Home.Score.Points)
-		if err != nil {
-			homeScore = 0
-		}
-		awayScore, err := strconv.Atoi(element.Away.Score.Points)
-		if err != nil {
-			homeScore = 0
-		}
-		convertToFinishedGame(&element)
-		scores = append(
-			scores,
-			Game{
-				Home:                  Team{Name: element.Home.FullName, Score: homeScore},
-				Away:                  Team{Name: element.Away.FullName, Score: awayScore},
-				CurrentPeriodOrdinal:  nbaCurrentPeriodToGameCurrentPeriod(element.CurrentPeriod),
-				TimeRemainingInPeriod: element.Clock,
-			})
-	}
-	return scores
+	return scrapeScores()
 }
 
-func convertToFinishedGame(nbaGame *nbagame) {
-	if (nbaCurrentPeriodToGameCurrentPeriod(nbaGame.CurrentPeriod) == "4th" || nbaCurrentPeriodToGameCurrentPeriod(nbaGame.CurrentPeriod) == "OT") && nbaGame.Clock == "" {
-		nbaGame.Clock = "Final"
-	}
-}
+func scrapeScores() []Game {
+	var games []Game
+	c := colly.NewCollector()
 
-func nbaCurrentPeriodToGameCurrentPeriod(nbaCurrentPeriod string) string {
-	currentPeriod, err := strconv.Atoi(nbaCurrentPeriod[:1])
-	if err != nil {
-		log.Fatal(err)
-	}
-	if currentPeriod == 1 {
-		return "1st"
-	} else if currentPeriod == 2 {
-		return "2nd"
-	} else if currentPeriod == 3 {
-		return "3rd"
-	} else if currentPeriod == 4 {
-		return "4th"
-	} else if currentPeriod >= 5 {
-		return "OT"
-	} else {
-		return ""
-	}
+	c.OnHTML(".EventCard__eventCardContainer--3hTGN", func(e *colly.HTMLElement) {
+		teams := e.ChildTexts(".EventCard__teamName--JweK5")
+		scores := e.ChildTexts(".EventCard__scoreColumn--2JZbq")
+		clock := e.ChildText(".EventCard__clockColumn--3lEPz")
+		homeTeam := teams[0]
+		homeScore, _ := strconv.Atoi(scores[0])
+		awayTeam := teams[1]
+		awayScore, _ := strconv.Atoi(scores[1])
+		game := Game{
+			Home: Team{
+				Name:  teamMap[homeTeam],
+				Score: homeScore,
+			},
+			Away: Team{
+				Name:  teamMap[awayTeam],
+				Score: awayScore,
+			},
+			CurrentPeriodOrdinal:  "",
+			TimeRemainingInPeriod: clock,
+		}
+		games = append(games, game)
+	})
+
+	c.Visit("https://www.thescore.com/nba/events/date/2020-01-23")
+
+	return games
 }

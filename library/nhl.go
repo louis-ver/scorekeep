@@ -45,7 +45,12 @@ func (n *nhlapi) GetScores(date string, favorites []string) []Game {
 		panic(err)
 	}
 	var scores []Game
-	games := nhldates.Dates[0]
+	var games nhldate
+	if len(nhldates.Dates) > 0 {
+		games = nhldates.Dates[0]
+	} else {
+		return scores
+	}
 	// TODO: Rewrite this in parallel
 	for _, element := range games.Games {
 		game := n.GetGameState(&element)
