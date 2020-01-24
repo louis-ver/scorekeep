@@ -7,6 +7,7 @@ COPY . .
 RUN apk add git \
     && go get -u -v \
         github.com/gin-gonic/gin \
+        github.com/gocolly/colly \
         golang.org/x/text/transform \
         golang.org/x/text/unicode/norm \
     && go build -o /usr/local/bin/scorekeep-server ./scorekeep-server
