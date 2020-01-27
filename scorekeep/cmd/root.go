@@ -34,6 +34,7 @@ type team struct {
 
 type League struct {
 	Name  string
+	Icon  string
 	Games []game
 }
 
@@ -49,10 +50,12 @@ var rootCmd = &cobra.Command{
 			{
 				Name:  "National Hockey League",
 				Games: nhlGames,
+				Icon:  "🏒",
 			},
 			{
 				Name:  "National Basketball Association",
 				Games: nbaGames,
+				Icon:  "🏀",
 			},
 		})
 
@@ -81,10 +84,12 @@ func printScores(leagues []League) {
 		default:
 			periodName = "QUARTER"
 		}
-		fmt.Fprintf(w, "%s\t\t\t\t\t\n", leagueUpperCase)
-		fmt.Fprintf(w, "AWAY\tSCORE\tHOME\tSCORE\t%s\tTIME REMAINING\n", periodName)
-		for _, element := range league.Games {
-			fmt.Fprintf(w, "%s\t%d\t%s\t%d\t%s\t%s\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score, element.CurrentPeriodOrdinal, element.TimeRemainingInPeriod)
+		if len(league.Games) > 0 {
+			fmt.Fprintf(w, "%s %s\t\t\t\t\t\n", league.Icon, leagueUpperCase)
+			fmt.Fprintf(w, "AWAY\tSCORE\tHOME\tSCORE\t%s\tREMAINING\n", periodName)
+			for _, element := range league.Games {
+				fmt.Fprintf(w, "%s\t%d\t%s\t%d\t%s\t%s\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score, element.CurrentPeriodOrdinal, element.TimeRemainingInPeriod)
+			}
 		}
 	}
 	w.Flush()

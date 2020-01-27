@@ -1,8 +1,10 @@
 package library
 
 import (
+	"fmt"
 	"github.com/gocolly/colly"
 	"strconv"
+	"strings"
 )
 
 var teamMap = map[string]string{
@@ -53,38 +55,11 @@ func (n *nba) GetLeagueInformation() League {
 	}
 }
 
-type data struct {
-	Api api `json:"api"`
+func (n *nba) GetScores(date string) []Game {
+	return n.scrapeScores(date)
 }
 
-type api struct {
-	Games []nbagame `json:"games"`
-}
-
-type nbagame struct {
-	Home          nbateam `json:"hTeam"`
-	Away          nbateam `json:"vTeam"`
-	CurrentPeriod string  `json:"currentPeriod"`
-	Status        string  `json:"statusGame"`
-	Clock         string  `json:"clock"`
-}
-
-type nbateam struct {
-	ID       string `json:"teamId"`
-	FullName string `json:"fullName"`
-	Name     string `json:"nickName"`
-	Score    score  `json:"score"`
-}
-
-type score struct {
-	Points string `json:"points"`
-}
-
-func (n *nba) GetScores(date string, favorites []string) []Game {
-	return scrapeScores()
-}
-
-func scrapeScores() []Game {
+func (n *nba) scrapeScores(date string) []Game {
 	var games []Game
 	c := colly.NewCollector()
 
@@ -96,6 +71,13 @@ func scrapeScores() []Game {
 		homeScore, _ := strconv.Atoi(scores[0])
 		awayTeam := teams[1]
 		awayScore, _ := strconv.Atoi(scores[1])
+		var currentPeriod, timeRemaining string
+		currentPeriod = clock
+		if !strings.Contains(clock, "Final") {
+			times := strings.Split(clock, " ")
+			currentPeriod = times[1]
+			timeRemaining = times[0]
+		}
 		game := Game{
 			Home: Team{
 				Name:  teamMap[homeTeam],
@@ -105,13 +87,13 @@ func scrapeScores() []Game {
 				Name:  teamMap[awayTeam],
 				Score: awayScore,
 			},
-			CurrentPeriodOrdinal:  "",
-			TimeRemainingInPeriod: clock,
+			CurrentPeriodOrdinal:  currentPeriod,
+			TimeRemainingInPeriod: timeRemaining,
 		}
 		games = append(games, game)
 	})
 
-	c.Visit("https://www.thescore.com/nba/events/date/2020-01-23")
+	c.Visit(fmt.Sprintf("%s/events/date/%s", n.host, date))
 
 	return games
 }

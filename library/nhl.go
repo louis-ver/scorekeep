@@ -34,7 +34,7 @@ type nhlgame struct {
 	ID int `json:"gamePk"`
 }
 
-func (n *nhlapi) GetScores(date string, favorites []string) []Game {
+func (n *nhlapi) GetScores(date string) []Game {
 	resp, err := http.Get(fmt.Sprintf("%s%s?startDate=%s&endDate=%s", n.host, "/schedule", date, date))
 	if err != nil {
 		panic(err)

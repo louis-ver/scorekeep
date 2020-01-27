@@ -30,21 +30,20 @@ func main() {
 
 	r.GET("/leagues/:league_name/scores", func(c *gin.Context) {
 		date := c.DefaultQuery("date", time.Now().Format("2006-01-02"))
-		favorites := c.DefaultQuery("favorites", "")
 
 		leagueApi, ok := apis[c.Param("league_name")]
 		if !ok {
 			serverError(c, httperror{Message: "league not supported by scorekeep", HttpCode: http.StatusNotFound})
 		} else {
-			scoresResponse(c, leagueApi, date, []string{favorites})
+			scoresResponse(c, leagueApi, date)
 		}
 	})
 
 	r.Run(":8080")
 }
 
-func scoresResponse(c *gin.Context, l library.Leaguer, date string, favorites []string) {
-	c.JSON(http.StatusOK, l.GetScores(date, favorites))
+func scoresResponse(c *gin.Context, l library.Leaguer, date string) {
+	c.JSON(http.StatusOK, l.GetScores(date))
 }
 
 func leaguesResponse(c *gin.Context, leagueMap map[string]library.Leaguer) {

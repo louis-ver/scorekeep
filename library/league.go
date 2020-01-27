@@ -1,7 +1,7 @@
 package library
 
 type Leaguer interface {
-	GetScores(date string, favorites []string) []Game
+	GetScores(date string) []Game
 	GetLeagueInformation() League
 }
 
