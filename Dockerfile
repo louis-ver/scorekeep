@@ -4,7 +4,11 @@ WORKDIR /go/src/github.com/louis-ver/scorekeep
 
 COPY . .
 
-RUN apk add git \
+ENV TZ="America/Montreal"
+
+RUN apk add \
+    git \
+    tzdata \
     && go get -u -v \
         github.com/gin-gonic/gin \
         github.com/gocolly/colly \

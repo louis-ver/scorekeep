@@ -72,13 +72,13 @@ func (n *nba) scrapeScores(date string) []Game {
 		awayTeam := teams[1]
 		awayScore, _ := strconv.Atoi(scores[1])
 		var currentPeriodOrdinal string
-		if !strings.Contains(clock, "Final") {
+		if !strings.Contains(clock, "Final") || clock != "" {
 			times := strings.Split(clock, " ")
 			clock = times[0]
 			currentPeriodOrdinal = times[1]
 		} else if strings.Contains(clock, "OT") {
 			currentPeriodOrdinal = "5th"
-		} else {
+		} else if strings.Contains(clock, "Final") {
 			currentPeriodOrdinal = "4th"
 		}
 		game := Game{
