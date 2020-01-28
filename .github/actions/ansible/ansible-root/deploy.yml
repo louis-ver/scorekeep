@@ -1,18 +1,18 @@
 - hosts: web
   remote_user: githubactions
   tasks:
-  - name: Pull cmd-server
+  - name: Pull scorekeep-server
     docker_image:
-      name: louisolivier/cmd:{{ build_sha }}-develop
+      name: louisolivier/scorekeep:{{ build_sha }}-develop
   - name: Copy file with owner and permissions
     copy:
       src: /ansible/.env
-      dest: /var/tmp/cmd/.env
+      dest: /var/tmp/scorekeep/.env
       mode: '0644'
   - name: Start server
     docker_container:
-      name: cmd
-      image: louisolivier/cmd:{{ build_sha }}-develop
-      env_file: /var/tmp/cmd/.env
+      name: scorekeep
+      image: louisolivier/scorekeep:{{ build_sha }}-develop
+      env_file: /var/scorekeep/scorekeep/.env
       ports:
         - "8080:8080"
