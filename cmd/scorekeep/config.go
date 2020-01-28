@@ -14,15 +14,18 @@ import (
 const (
 	NHL            = "nhl"
 	configDirname  = ".scorekeep"
-	configFilename = "config.yaml"
+	configFilename = "config"
 )
 
 type Config struct {
+	ServerUrl string `yaml:"server-url"`
+	Timezone  string
 	Favorites Favorites
 }
 
 type Favorites struct {
 	NHL []string
+	NBA []string
 }
 
 func CreateConfigDirAndFile() {

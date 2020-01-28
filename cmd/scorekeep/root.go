@@ -16,8 +16,6 @@ var (
 	date string
 )
 
-var scorekeepServerUrl = os.Getenv("SCOREKEEP_SERVER_URL")
-
 type game struct {
 	Home                  team
 	Away                  team
@@ -61,7 +59,7 @@ var rootCmd = &cobra.Command{
 }
 
 func fetchScores(league string) []game {
-	resp, err := http.Get(fmt.Sprintf("%s/leagues/%s/scores", scorekeepServerUrl, league))
+	resp, err := http.Get(fmt.Sprintf("%s/leagues/%s/scores", GetConfig().ServerUrl, league))
 	if err != nil {
 		log.Fatal(err)
 	}

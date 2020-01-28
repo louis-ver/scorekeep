@@ -36,7 +36,7 @@ var leaguesCmd = &cobra.Command{
 	Short: "Get all leagues",
 	Long:  "Get all leagues supported by Scorekeep",
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := http.Get(scorekeepServerUrl + "/leagues")
+		resp, err := http.Get(GetConfig().ServerUrl + "/leagues")
 		if err != nil {
 			log.Fatal(err)
 		}
