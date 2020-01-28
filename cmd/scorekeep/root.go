@@ -84,7 +84,7 @@ func printScores(leagues []League) {
 		}
 		if len(league.Games) > 0 {
 			fmt.Fprintf(w, "%s %s\t\t\t\t\t\n", league.Icon, leagueUpperCase)
-			fmt.Fprintf(w, "AWAY\tSCORE\tHOME\tSCORE\t%s\tREMAINING\n", periodName)
+			fmt.Fprintf(w, "AWAY\tSCORE\tHOME\tSCORE\t%s\tTIME\n", periodName)
 			for _, element := range league.Games {
 				fmt.Fprintf(w, "%s\t%d\t%s\t%d\t%s\t%s\n", element.Away.Name, element.Away.Score, element.Home.Name, element.Home.Score, element.CurrentPeriodOrdinal, element.TimeRemainingInPeriod)
 			}

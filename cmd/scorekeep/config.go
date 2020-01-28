@@ -13,7 +13,7 @@ import (
 
 const (
 	NHL            = "nhl"
-	configDirname  = ".cmd"
+	configDirname  = ".scorekeep"
 	configFilename = "config.yaml"
 )
 
