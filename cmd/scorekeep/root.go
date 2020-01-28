@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/louis-ver/scorekeep/library"
+	"github.com/louis-ver/scorekeep/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -16,9 +16,7 @@ var (
 	date string
 )
 
-const (
-	ScorekeepServerURL = "http://localhost:8080"
-)
+var scorekeepServerUrl = os.Getenv("SCOREKEEP_SERVER_URL")
 
 type game struct {
 	Home                  team
@@ -39,7 +37,7 @@ type League struct {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "scorekeep",
+	Use:   "cmd",
 	Short: "The easiest way to track scores across leagues",
 	Long:  "Scorekeep is a CLI that enables you to track game scores across the most popular professional sports leagues",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -63,12 +61,12 @@ var rootCmd = &cobra.Command{
 }
 
 func fetchScores(league string) []game {
-	resp, err := http.Get(fmt.Sprintf("%s/leagues/%s/scores", ScorekeepServerURL, league))
+	resp, err := http.Get(fmt.Sprintf("%s/leagues/%s/scores", scorekeepServerUrl, league))
 	if err != nil {
 		log.Fatal(err)
 	}
 	var games []game
-	library.DecodeJSON(resp, &games)
+	pkg.DecodeJSON(resp, &games)
 
 	return games
 }

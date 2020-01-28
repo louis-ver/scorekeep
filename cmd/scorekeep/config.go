@@ -7,13 +7,13 @@ import (
 	"os"
 	"os/user"
 
-	"github.com/louis-ver/scorekeep/library"
+	"github.com/louis-ver/scorekeep/pkg"
 	"gopkg.in/yaml.v2"
 )
 
 const (
 	NHL            = "nhl"
-	configDirname  = ".scorekeep"
+	configDirname  = ".cmd"
 	configFilename = "config.yaml"
 )
 
@@ -59,7 +59,7 @@ func (c *Config) WriteToFile() {
 func (c *Config) AddFavorite(f string, league string) {
 	switch league {
 	case NHL:
-		if !library.StringInSlice(f, c.Favorites.NHL) {
+		if !pkg.StringInSlice(f, c.Favorites.NHL) {
 			c.Favorites.NHL = append(c.Favorites.NHL, f)
 		}
 	default:

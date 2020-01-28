@@ -1,4 +1,4 @@
-package library
+package pkg
 
 type Leaguer interface {
 	GetScores(date string) []Game

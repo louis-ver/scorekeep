@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/louis-ver/scorekeep/library"
+	"github.com/louis-ver/scorekeep/pkg"
 	"net/http"
 	"os"
 	"time"
@@ -17,9 +17,9 @@ func main() {
 	nhlHost := os.Getenv("NHL_API_HOST")
 	nbaHost, nbaApiKey := os.Getenv("NBA_API_HOST"), os.Getenv("NBA_API_KEY")
 
-	apis := map[string]library.Leaguer{
-		"nhl": library.InitializeNHL(nhlHost),
-		"nba": library.InitializeNBA(nbaHost, nbaApiKey),
+	apis := map[string]pkg.Leaguer{
+		"nhl": pkg.InitializeNHL(nhlHost),
+		"nba": pkg.InitializeNBA(nbaHost, nbaApiKey),
 	}
 
 	r := gin.Default()
@@ -33,7 +33,7 @@ func main() {
 
 		leagueApi, ok := apis[c.Param("league_name")]
 		if !ok {
-			serverError(c, httperror{Message: "league not supported by scorekeep", HttpCode: http.StatusNotFound})
+			serverError(c, httperror{Message: "league not supported by cmd", HttpCode: http.StatusNotFound})
 		} else {
 			scoresResponse(c, leagueApi, date)
 		}
@@ -42,12 +42,12 @@ func main() {
 	r.Run(":8080")
 }
 
-func scoresResponse(c *gin.Context, l library.Leaguer, date string) {
+func scoresResponse(c *gin.Context, l pkg.Leaguer, date string) {
 	c.JSON(http.StatusOK, l.GetScores(date))
 }
 
-func leaguesResponse(c *gin.Context, leagueMap map[string]library.Leaguer) {
-	var supportedLeagues []library.League
+func leaguesResponse(c *gin.Context, leagueMap map[string]pkg.Leaguer) {
+	var supportedLeagues []pkg.League
 	for _, leaguer := range leagueMap {
 		supportedLeagues = append(supportedLeagues, leaguer.GetLeagueInformation())
 	}

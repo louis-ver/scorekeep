@@ -1,8 +1,8 @@
-package cmd
+package main
 
 import (
 	"fmt"
-	"github.com/louis-ver/scorekeep/library"
+	"github.com/louis-ver/scorekeep/pkg"
 	"log"
 	"net/http"
 	"os"
@@ -27,7 +27,7 @@ var getCmd = &cobra.Command{
 	Short: "Get various types of content",
 	Long: `Get various types of content.
 		
-	Get requires a subcommand, e.g. ` + "`scorekeep get leagues`.",
+	Get requires a subcommand, e.g. ` + "`cmd get leagues`.",
 	Run: nil,
 }
 
@@ -36,12 +36,12 @@ var leaguesCmd = &cobra.Command{
 	Short: "Get all leagues",
 	Long:  "Get all leagues supported by Scorekeep",
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := http.Get(ScorekeepServerURL + "/leagues")
+		resp, err := http.Get(scorekeepServerUrl + "/leagues")
 		if err != nil {
 			log.Fatal(err)
 		}
 		var leagues []league
-		library.DecodeJSON(resp, &leagues)
+		pkg.DecodeJSON(resp, &leagues)
 		printLeagues(leagues)
 	},
 }

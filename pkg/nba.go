@@ -1,4 +1,4 @@
-package library
+package pkg
 
 import (
 	"fmt"
@@ -71,12 +71,15 @@ func (n *nba) scrapeScores(date string) []Game {
 		homeScore, _ := strconv.Atoi(scores[0])
 		awayTeam := teams[1]
 		awayScore, _ := strconv.Atoi(scores[1])
-		var currentPeriod, timeRemaining string
-		currentPeriod = clock
+		var currentPeriodOrdinal string
 		if !strings.Contains(clock, "Final") {
 			times := strings.Split(clock, " ")
-			currentPeriod = times[1]
-			timeRemaining = times[0]
+			clock = times[0]
+			currentPeriodOrdinal = times[1]
+		} else if strings.Contains(clock, "OT") {
+			currentPeriodOrdinal = "5th"
+		} else {
+			currentPeriodOrdinal = "4th"
 		}
 		game := Game{
 			Home: Team{
@@ -87,8 +90,8 @@ func (n *nba) scrapeScores(date string) []Game {
 				Name:  teamMap[awayTeam],
 				Score: awayScore,
 			},
-			CurrentPeriodOrdinal:  currentPeriod,
-			TimeRemainingInPeriod: timeRemaining,
+			CurrentPeriodOrdinal:  currentPeriodOrdinal,
+			TimeRemainingInPeriod: clock,
 		}
 		games = append(games, game)
 	})
