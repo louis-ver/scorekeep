@@ -4,11 +4,8 @@ WORKDIR /go/src/github.com/louis-ver/scorekeep
 
 COPY . .
 
-ENV TZ="America/Montreal"
-
 RUN apk add \
     git \
-    tzdata \
     && go get -u -v \
         github.com/gin-gonic/gin \
         github.com/gocolly/colly \
@@ -18,8 +15,14 @@ RUN apk add \
 
 FROM alpine:latest
 
+RUN apk add \
+    tzdata
+
+ENV TZ America/Montreal
+
 WORKDIR /usr/local/bin
 
 COPY --from=builder /usr/local/bin/scorekeep-server scorekeep-server
+
 
 ENTRYPOINT [ "scorekeep-server" ]
