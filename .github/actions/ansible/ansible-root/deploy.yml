@@ -13,6 +13,6 @@
     docker_container:
       name: scorekeep
       image: louisolivier/scorekeep:{{ build_sha }}-develop
-      env_file: /var/scorekeep/scorekeep/.env
+      env_file: /var/tmp/scorekeep/.env
       ports:
         - "8080:8080"
