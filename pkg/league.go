@@ -9,6 +9,7 @@ type League struct {
 	Name    string
 	Acronym string
 	Sport   string
+	Icon    string
 }
 
 type Game struct {

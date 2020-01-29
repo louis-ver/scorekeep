@@ -30,9 +30,10 @@ type team struct {
 }
 
 type League struct {
-	Name  string
-	Icon  string
-	Games []game
+	Name    string
+	Acronym string
+	Icon    string
+	Games   []game
 }
 
 var rootCmd = &cobra.Command{
@@ -41,21 +42,21 @@ var rootCmd = &cobra.Command{
 	Long:  "Scorekeep is a CLI that enables you to track game scores across the most popular professional sports leagues",
 	Run: func(cmd *cobra.Command, args []string) {
 		c := make(chan League)
+		leagues := fetchSupportedLeagues()
+		for _, l := range leagues {
+			league := League{
+				Name:    l.Name,
+				Acronym: l.Acronym,
+				Icon:    l.Icon,
+			}
+			go fetchScores(league, date, c)
+		}
 
-		go fetchScores(League{
-			Name:  "nhl",
-			Icon:  "🏒",
-			Games: nil,
-		}, date, c)
-		go fetchScores(League{
-			Name:  "nba",
-			Icon:  "🏀",
-			Games: nil,
-		}, date, c)
-
-		l1, l2 := <-c, <-c
-		printScores([]League{l1, l2})
-
+		var leaguesWithGames []League
+		for range leagues {
+			leaguesWithGames = append(leaguesWithGames, <-c)
+		}
+		printScores(leaguesWithGames)
 	},
 }
 
@@ -63,7 +64,7 @@ func fetchScores(league League, date string, c chan League) {
 	if date == "" {
 		date = time.Now().Format("2006-01-02")
 	}
-	resp, err := http.Get(fmt.Sprintf("%s/leagues/%s/scores?date=%s", GetConfig().ServerUrl, league.Name, date))
+	resp, err := http.Get(fmt.Sprintf("%s/leagues/%s/scores?date=%s", GetConfig().ServerUrl, strings.ToLower(league.Acronym), date))
 	if err != nil {
 		log.Fatal(err)
 	}

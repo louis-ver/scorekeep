@@ -54,6 +54,7 @@ func (n *nba) GetLeagueInformation() League {
 		Name:    "National Basketball Association",
 		Acronym: "NBA",
 		Sport:   "Basketball",
+		Icon:    "🏀",
 	}
 }
 

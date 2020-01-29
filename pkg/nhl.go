@@ -19,6 +19,7 @@ func (n *nhlapi) GetLeagueInformation() League {
 		Name:    "National Hockey League",
 		Acronym: "NHL",
 		Sport:   "Hockey",
+		Icon:    "🏒",
 	}
 }
 

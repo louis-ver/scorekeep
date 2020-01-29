@@ -20,6 +20,7 @@ type league struct {
 	Name    string `json:"Name"`
 	Acronym string `json:"Acronym"`
 	Sport   string `json:"Sport"`
+	Icon    string `json:"Icon"`
 }
 
 var getCmd = &cobra.Command{
@@ -54,9 +55,9 @@ func fetchSupportedLeagues() []league {
 
 func printLeagues(leagues []league) {
 	w := tabwriter.NewWriter(os.Stdout, 10, 10, 3, ' ', tabwriter.DiscardEmptyColumns)
-	fmt.Fprintln(w, "NAME\tACRONYM\tSPORT")
+	fmt.Fprintln(w, "NAME\tACRONYM\tSPORT\tICON")
 	for _, element := range leagues {
-		fmt.Fprintf(w, "%s\t%s\t%s\t\n", element.Name, element.Acronym, element.Sport)
+		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t\n", element.Name, element.Acronym, element.Sport, element.Icon)
 	}
 	w.Flush()
 }
