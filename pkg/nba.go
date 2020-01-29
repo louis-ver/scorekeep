@@ -45,8 +45,8 @@ type nba struct {
 	apikey string
 }
 
-func InitializeNBA(host, apiKey string) Leaguer {
-	return &nba{host: host, apikey: apiKey}
+func InitializeNBA(host string) Leaguer {
+	return &nba{host: host}
 }
 
 func (n *nba) GetLeagueInformation() League {

@@ -15,11 +15,11 @@ type httperror struct {
 
 func main() {
 	nhlHost := os.Getenv("NHL_API_HOST")
-	nbaHost, nbaApiKey := os.Getenv("NBA_API_HOST"), os.Getenv("NBA_API_KEY")
+	nbaHost := os.Getenv("NBA_API_HOST")
 
 	apis := map[string]pkg.Leaguer{
 		"nhl": pkg.InitializeNHL(nhlHost),
-		"nba": pkg.InitializeNBA(nbaHost, nbaApiKey),
+		"nba": pkg.InitializeNBA(nbaHost),
 	}
 
 	r := gin.Default()
