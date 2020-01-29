@@ -36,14 +36,20 @@ var leaguesCmd = &cobra.Command{
 	Short: "Get all leagues",
 	Long:  "Get all leagues supported by Scorekeep",
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := http.Get(GetConfig().ServerUrl + "/leagues")
-		if err != nil {
-			log.Fatal(err)
-		}
-		var leagues []league
-		pkg.DecodeJSON(resp, &leagues)
+		leagues := fetchSupportedLeagues()
 		printLeagues(leagues)
 	},
+}
+
+func fetchSupportedLeagues() []league {
+	resp, err := http.Get(GetConfig().ServerUrl + "/leagues")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var leagues []league
+	pkg.DecodeJSON(resp, &leagues)
+
+	return leagues
 }
 
 func printLeagues(leagues []league) {
