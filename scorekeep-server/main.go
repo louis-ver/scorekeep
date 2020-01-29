@@ -33,7 +33,7 @@ func main() {
 
 		leagueApi, ok := apis[c.Param("league_name")]
 		if !ok {
-			serverError(c, httperror{Message: "league not supported by cmd", HttpCode: http.StatusNotFound})
+			serverError(c, httperror{Message: "league not supported by scorekeep", HttpCode: http.StatusNotFound})
 		} else {
 			scoresResponse(c, leagueApi, date)
 		}

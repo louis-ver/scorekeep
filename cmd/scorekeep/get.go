@@ -28,7 +28,7 @@ var getCmd = &cobra.Command{
 	Short: "Get various types of content",
 	Long: `Get various types of content.
 		
-	Get requires a subcommand, e.g. ` + "`cmd get leagues`.",
+	Get requires a subcommand, e.g. ` + "`scorekeep get leagues`.",
 	Run: nil,
 }
 
