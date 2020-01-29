@@ -13,6 +13,7 @@ import (
 
 const (
 	NHL            = "nhl"
+	NBA            = "nba"
 	configDirname  = ".scorekeep"
 	configFilename = "config"
 )
@@ -57,6 +58,17 @@ func (c *Config) WriteToFile() {
 	}
 
 	ioutil.WriteFile(getConfigFilePath(), d, 0644)
+}
+
+func (c *Config) GetFavorites(league string) []string {
+	var favorites []string
+	switch league {
+	case NHL:
+		favorites = GetConfig().Favorites.NHL
+	case NBA:
+		favorites = GetConfig().Favorites.NBA
+	}
+	return favorites
 }
 
 func (c *Config) AddFavorite(f string, league string) {

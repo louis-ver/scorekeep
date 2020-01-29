@@ -28,7 +28,7 @@ func DecodeJSON(resp *http.Response, target interface{}) error {
 	return err
 }
 
-func teamNameToResourceName(teamName string) string {
+func TeamNameToResourceName(teamName string) string {
 	t := transform.Chain(norm.NFD, transform.RemoveFunc(func(r rune) bool {
 		return unicode.Is(unicode.Mn, r)
 	}))

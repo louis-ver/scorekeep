@@ -11,6 +11,7 @@ var teamMap = map[string]string{
 	"ATL Hawks":         "Atlanta Hawks",
 	"BKN Nets":          "Brooklyn Nets",
 	"BOS Celtics":       "Boston Celtics",
+	"CHA Hornets":       "Charlotte Hornets",
 	"CHI Bulls":         "Chicago Bulls",
 	"CLE Cavaliers":     "Cleveland Cavaliers",
 	"DAL Mavericks":     "Dallas Mavericks",

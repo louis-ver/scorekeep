@@ -8,14 +8,14 @@ import (
 
 func TestTeamNameToResourceNameWithPeriod(t *testing.T) {
 	expect := "st-louis-blues"
-	got := teamNameToResourceName("St. Louis Blues")
+	got := TeamNameToResourceName("St. Louis Blues")
 
 	assert.Equal(t, expect, got)
 }
 
 func TestTeamNameToResourceNameWithAccent(t *testing.T) {
 	expect := "montreal-canadiens"
-	got := teamNameToResourceName("Montréal Canadiens")
+	got := TeamNameToResourceName("Montréal Canadiens")
 
 	assert.Equal(t, expect, got)
 }

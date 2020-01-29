@@ -66,7 +66,26 @@ func fetchScores(league string) []game {
 	var games []game
 	pkg.DecodeJSON(resp, &games)
 
+	var favorites []game
+	var regulars []game
+
+	for _, game := range games {
+		if teamInFavorites(game.Away.Name, league) || teamInFavorites(game.Home.Name, league) {
+			favorites = append(favorites, game)
+		} else {
+			regulars = append(regulars, game)
+		}
+	}
+	games = append(favorites, regulars...)
+
 	return games
+}
+
+func teamInFavorites(team, league string) bool {
+	config := GetConfig()
+	favorites := config.GetFavorites(league)
+	return pkg.StringInSlice(team, favorites)
+
 }
 
 func printScores(leagues []League) {
